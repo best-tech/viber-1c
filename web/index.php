@@ -28,7 +28,7 @@ if ($REQUEST_METHOD=='POST')
 }
 else
 {
-	$arrayParam = http_build_query($_GET['q']);
+	$arrayParam = http_build_query($_GET);
     // if (isset($_GET['q'])) 
 	// 	$queryAddr = '?q='.$_GET['q'];
 	if ($arrayParam) $arrayParam = '?'.$arrayParam;

@@ -10,34 +10,40 @@ $arrayParam ='';
 if ($REQUEST_METHOD=='POST')
 {
 	$text = implode("", file('php://input'));
-}
-else
-{
-	$arrayParam = http_build_query($_GET['q']);
-    // if (isset($_GET['q'])) 
-	// 	$queryAddr = '?q='.$_GET['q'];
-}
 
-if ($arrayParam) $arrayParam = '?'.$arrayParam;
-
-
-
-
-//return;
-	// отправляем запрос
-	$responce = file_get_contents('http://4098.ru/viber-1c'.$arrayParam, 
-		false, 
-		stream_context_create(
-			array(
-				'http' => array(
-					'method' => $REQUEST_METHOD,
-					'header' => 'Content-Type: application/json; ',
-					'content' => $text
+	$responce = file_get_contents('http://4098.ru/viber-1c', 
+	false, 
+	stream_context_create(
+		array(
+			'http' => array(
+				'method' => 'POST',
+				'header' => 'Content-Type: application/json; ',
+				'content' => $text
 				)
 			)
 		)
 	);
     
     var_export($responce);
+}
+else
+{
+	$arrayParam = http_build_query($_GET['q']);
+    // if (isset($_GET['q'])) 
+	// 	$queryAddr = '?q='.$_GET['q'];
+	if ($arrayParam) $arrayParam = '?'.$arrayParam;
+	$responce = file_get_contents('http://4098.ru/viber-1c'.$arrayParam);
+
+	 var_export($responce);
+}
+
+
+
+
+
+
+//return;
+	// отправляем запрос
+
 
 ?>

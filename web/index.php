@@ -1,4 +1,5 @@
 <?php
+require('../vendor/autoload.php');
 
-echo 'yes';
+echo 'yes '.getenv('TIMES');
 ?>

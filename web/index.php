@@ -24,7 +24,7 @@ if ($REQUEST_METHOD=='POST')
 		)
 	);
     
-    var_export($responce);
+    echo $responce;
 }
 else
 {
@@ -34,7 +34,7 @@ else
 	if ($arrayParam) $arrayParam = '?'.$arrayParam;
 	$responce = file_get_contents('http://4098.ru/viber-1c'.$arrayParam);
 
-	 var_export($responce);
+	 echo $responce;
 }
 
 

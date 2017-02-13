@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 $REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
 
-$queryAddr = '';
+$arrayParam ='';
 
 if ($REQUEST_METHOD=='POST')
 {
@@ -13,17 +13,19 @@ if ($REQUEST_METHOD=='POST')
 }
 else
 {
-    if (isset($_GET['q'])) 
-		$queryAddr = '?q='.$_GET['q'];
+	$arrayParam = http_build_query($_GET['q']);
+    // if (isset($_GET['q'])) 
+	// 	$queryAddr = '?q='.$_GET['q'];
 }
 
+if ($arrayParam) $arrayParam = '?'.$arrayParam;
 
 
 
 
 //return;
 	// отправляем запрос
-	$responce = file_get_contents('http://4098.ru/viber-1c'.$queryAddr, 
+	$responce = file_get_contents('http://4098.ru/viber-1c'.$arrayParam, 
 		false, 
 		stream_context_create(
 			array(

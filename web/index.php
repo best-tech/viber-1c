@@ -13,15 +13,15 @@ else
 {
     if (isset($_GET['q']))
     $text = $_GET['q'];
-    else  $text ='{"no data":"false"}';
+    else  {$text ='{"no data":"false"}'; echo $text; return;}
 }
 
-echo $text;
+
 //echo $text;
 // json_decode($text);
 //var_export($text);
 
-return;
+//return;
 	// отправляем запрос
 	$responce = file_get_contents('http://4098.ru/viber-1c', 
 		false, 

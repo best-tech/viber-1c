@@ -13,7 +13,7 @@ $dbName = $arr[0];
 
 if (!$dbName) {echo 'no db name'; return;};
 
-$connectionString = str_last_replace("/".$dbName,"",$connectionString);
+//$connectionString = str_last_replace("/".$dbName,"",$connectionString);
 
 if (!$connectionString) {echo 'no connection string'; return;};
 

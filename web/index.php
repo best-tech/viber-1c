@@ -1,7 +1,7 @@
 <?php
 require('../vendor/autoload.php');
 
-//header('Content-Type: application/json');
+header('Content-Type: application/json');
 
 $REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
 
@@ -13,8 +13,10 @@ if (isset($_GET['limit'])&&is_int((int) $_GET['limit'])) $limit=(int) $_GET['lim
 if ($REQUEST_METHOD=='POST')
 {
 	$text = (string) implode("", file('php://input'));
-	insertOne($text);
-	echo $responce;
+	$responce = insertOne($text);
+	if($responce) $text = $responce;
+
+	echo $text;
 }
 else
 {
@@ -22,9 +24,9 @@ else
     if (isset($_GET['q'])) 
 	{
 		$text = $_GET['q'];
-		$eRR = insertOne($text);
+		$responce = insertOne($text);
 
-		if($eRR) $text = $eRR;
+		if($responce) $text = $responce;
 		
 	}	
 	else
@@ -40,9 +42,13 @@ else
 function ReadData($limit)
 {
 
+	$arrResult = array();
+
 	$collection = getConnectionDB();
 	if (!$collection) return;
 
+
+	return json_encode($arrResult);
 }
 function insertOne($text)
 {

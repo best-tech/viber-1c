@@ -1,7 +1,7 @@
 <?php
 require('../vendor/autoload.php');
 
-//header('Content-Type: application/json');
+header('Content-Type: application/json');
 
 $REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
 
@@ -41,7 +41,7 @@ else
 
 	echo $text;
 
-function ReadData($limit)
+function ReadData($limit=10)
 {
 
 	$arrResult = array();
@@ -49,6 +49,15 @@ function ReadData($limit)
 	$collection = getConnectionDB();
 	if (!$collection) return;
 
+	$cursor = $collection->find([], ['limit' => $limit, 'sort' => ['time' => 1]]);
+
+	foreach ($cursor as $document) {
+		
+		if (!$cursor['content']) continue;
+
+		$arrResult[] = json_decode($cursor['content']);
+
+	}
 
 	return json_encode($arrResult);
 }
@@ -60,9 +69,13 @@ function insertOne($text)
 		$jsObject = json_decode($text,true);
 		
 	} catch (Exception $e) {
+		header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
 		return 'reply no JSON format';
 	}
-	if (!$jsObject) return 'reply no JSON format';
+	if (!$jsObject) {
+		header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+		return 'reply no JSON format';
+	};
 	$collection = getConnectionDB();
 	if (!$collection) return 'no db connection';
 	
@@ -100,9 +113,5 @@ function getConnectionDB()
 	
 	return $collection;
 }
-
-
-
-
 
 ?>

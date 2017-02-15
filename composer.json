@@ -7,7 +7,6 @@
   "require-dev": {
     "heroku/heroku-buildpack-php": "*",
     "monolog/monolog": "^1.4",
-    "mongodb/mongodb": "^1.1",
     "ext-mongodb": "^1.2.0"
   }
 }

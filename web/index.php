@@ -3,13 +3,33 @@ require('../vendor/autoload.php');
 
 //header('Content-Type: application/json');
 
-
 $connectionString =  getenv('MONGODB_URI');
 
-echo $connectionString;
+if (!$connectionString) $connectionString ="mongodb://heroku_7jhm3vw7:usl2213vp3pdhlaj3h0a1jo11m@ds153179.mlab.com:53179/heroku_7jhm3vw7";
 
-$connection = new MongoClient();
+$arr = array_reverse(explode('/', $connectionString));
 
+$dbName = $arr[0];
+
+if (!$dbName) {echo 'no db name'; return;};
+
+$connectionString = str_last_replace("/".$dbName,"",$connectionString);
+
+if (!$connectionString) {echo 'no connection string'; return;};
+
+$client = new MongoDB\Client($connectionString);
+
+$DataBase = $client->$dbName;
+$collection = $DataBase->incoming;
+
+$post = array(
+         'title'     => 'Что такое MongoDB',
+         'content'   => 'MongoDB это высокопроизводительная документо-ориентированная база данных...'
+      );
+	
+    $collection->insertOne($post);
+
+return;
 
 
 $REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
@@ -48,7 +68,13 @@ else
 
 
 
-
+function str_last_replace($search, $replace, $subject){
+    $pos = strrpos($subject, $search);
+    if($pos !== false)    {
+        $subject = substr_replace($subject, $replace, $pos, strlen($search));
+    }
+    return $subject;
+}
 
 
 //return;

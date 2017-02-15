@@ -13,10 +13,11 @@ if (isset($_GET['limit'])&&is_int((int) $_GET['limit'])) $limit=(int) $_GET['lim
 if ($REQUEST_METHOD=='POST')
 {
 	$text = (string) implode("", file('php://input'));
+
 	$responce = insertOne($text);
+
 	if($responce) $text = $responce;
 
-	echo $text;
 }
 else
 {
@@ -35,9 +36,10 @@ else
 		$text = ReadData($limit);		
 
 	}
-	echo $text;
+
 }
 
+	echo $text;
 
 function ReadData($limit)
 {
@@ -52,6 +54,8 @@ function ReadData($limit)
 }
 function insertOne($text)
 {
+	if(!$text) return 'no incoming data';
+
 	try {
 		$jsObject = json_decode($text);
 		
@@ -60,7 +64,7 @@ function insertOne($text)
 	}
 	if (!$jsObject) return 'reply no JSON format';
 	$collection = getConnectionDB();
-	if (!$collection) return;
+	if (!$collection) return 'no db connection';
 	
 	$post = array(
          'time'     => time(),

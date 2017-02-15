@@ -3,8 +3,13 @@ require('../vendor/autoload.php');
 
 header('Content-Type: application/json');
 
-ini_set('display_errors',1);
-ini_set("error_reporting", E_ALL);
+$debug = true;
+
+if ($debug)
+{
+	ini_set('display_errors',1);
+	ini_set("error_reporting", E_ALL);
+};
 
 $REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
 

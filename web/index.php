@@ -1,7 +1,7 @@
 <?php
 require('../vendor/autoload.php');
 
-header('Content-Type: application/json');
+//header('Content-Type: application/json');
 
 $REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
 
@@ -57,7 +57,7 @@ function insertOne($text)
 	if(!$text) return 'no incoming data';
 
 	try {
-		$jsObject = json_decode($text);
+		$jsObject = json_decode($text,true);
 		
 	} catch (Exception $e) {
 		return 'reply no JSON format';

@@ -57,6 +57,7 @@ function ReadData($limit=10)
 
 	$arrSort = array("limit" => $limit,"sort" => $arrOrder);
 
+	$arrForDel = array();
 
 	$cursor = $collection->find([], ['limit' => $limit, 'sort' => ['time' => 1]]);
 
@@ -66,8 +67,12 @@ function ReadData($limit=10)
 		
 		$arrResult[] = json_decode($document['content']);
 
+		$arrForDel[] = $document['id'];
+
 	}
 
+	$collection->deleteMany(['id' => $arrForDel]);
+	 
 	return json_encode($arrResult);
 }
 function insertOne($text)

@@ -56,9 +56,9 @@ function ReadData($limit=10)
 
 	foreach ($cursor as $document) {
 		
-		if (!$cursor['content']) continue;
+		if (!isset($cursor->content)) continue;
 
-		$arrResult[] = json_decode($cursor['content']);
+		$arrResult[] = json_decode($cursor->content);
 
 	}
 

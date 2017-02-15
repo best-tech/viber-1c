@@ -9,6 +9,7 @@ ini_set("error_reporting", E_ALL);
 $REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
 
 $limit = 100;
+$noDel = false;
 
 if (isset($_GET['limit'])&&is_int((int) $_GET['limit'])) $limit=(int) $_GET['limit'];
 
@@ -35,8 +36,8 @@ else
 	}	
 	else
 	{
-
-		$text = ReadData($limit);		
+		if (isset($_GET['nodel'])) $noDel = $_GET['nodel'];
+		$text = ReadData($limit,$noDel);		
 
 	}
 
@@ -44,7 +45,7 @@ else
 
 	echo $text;
 
-function ReadData($limit=10)
+function ReadData($limit=10,$noDel)
 {
 
 	$arrResult = array();
@@ -64,8 +65,8 @@ function ReadData($limit=10)
 		if (!isset($document['content'])) continue;
 		
 		$arrResult[] = json_decode($document['content']);
-
-		$collection->deleteOne(['_id' => $document['_id']]);
+		
+		if(!$noDel)	$collection->deleteOne(['_id' => $document['_id']]);
 
 	}
 

@@ -52,7 +52,7 @@ function insertOne($text)
 	} catch (Exception $e) {
 		return 'reply no JSON format';
 	}
-	
+	if (!$jsObject) return 'reply no JSON format';
 	$collection = getConnectionDB();
 	if (!$collection) return;
 	

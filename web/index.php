@@ -52,12 +52,20 @@ function ReadData($limit=10)
 	$collection = getConnectionDB();
 	if (!$collection) return;
 
+
+	$arrOrder = array('time' => 1);
+
+	$arrSort = array("limit" => $limit,"sort" => $arrOrder);
+
+
 	$cursor = $collection->find([], ['limit' => $limit, 'sort' => ['time' => 1]]);
 
 	foreach ($cursor as $document) {
 		
-		if (!isset($cursor->content)) continue;
+		echo $cursor->content;
 
+		if (!isset($cursor->content)) continue;
+		
 		$arrResult[] = json_decode($cursor->content);
 
 	}

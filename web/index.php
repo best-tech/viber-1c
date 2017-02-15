@@ -1,7 +1,16 @@
 <?php
 require('../vendor/autoload.php');
 
-header('Content-Type: application/json');
+//header('Content-Type: application/json');
+
+
+$connectionString =  getenv('MONGODB_URI');
+
+echo $connectionString;
+
+$connection = new MongoClient();
+
+
 
 $REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
 

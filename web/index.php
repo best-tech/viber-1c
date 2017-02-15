@@ -67,11 +67,11 @@ function ReadData($limit=10)
 		
 		$arrResult[] = json_decode($document['content']);
 
-		$arrForDel[] = $document['id'];
+		$arrForDel[] = $document['_id'];
 
 	}
 
-	$collection->deleteMany(['id' => $arrForDel]);
+	$collection->deleteMany(['_id' => $arrForDel]);
 	 
 	return json_encode($arrResult);
 }

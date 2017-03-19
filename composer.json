@@ -1,11 +1,13 @@
 {
   "require" : {
+    "heroku/heroku-buildpack-php": "*",
     "monolog/monolog": "^1.4",
     "mongodb/mongodb": "^1.1",
     "ext-mongodb": "^1.2.0"
   },
   "require-dev": {
     "heroku/heroku-buildpack-php": "*",
+    "mongodb/mongodb": "^1.1",
     "monolog/monolog": "^1.4",
     "ext-mongodb": "^1.2.0"
   }

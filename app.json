@@ -20,13 +20,9 @@
     },
     "addons": [
       {
-        "plan": "mongolab:shared-single-small",
-        "as": "MONGO"
+        "plan": "mongolab:shared-cluster-1",
+        "as": "mongolab"
       }
-    ],
-    "SETUP_BY": {
-            "description": "Ваше имя, название компании",
-            "value": ""
-    }
+    ]
   }
 }

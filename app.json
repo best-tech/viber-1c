@@ -6,10 +6,6 @@
   "logo": "https://github.com/1Cmobile/viber-1c/blob/master/images/logo.jpg?raw=true",
   "keywords": ["viber", "1c", "1c-enterprise"],
    "env": {
-    "MONGODB_URI": {
-      "description": "Путь к базе данных MongoDB",
-      "generator": "Адсрес монго"
-    },
     "DEBUG": {
       "description": "Флаг вывода отладочных сообщений",
       "value": "0"
@@ -23,11 +19,14 @@
       "value": "1000"
     },
     "addons": [
-      "openredis",
       {
         "plan": "mongolab:shared-single-small",
         "as": "MONGO"
       }
-    ]
+    ],
+    "SETUP_BY": {
+            "description": "Ваше имя, название компании",
+            "value": ""
+    }
   }
 }

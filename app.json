@@ -19,6 +19,6 @@
       "description": "Максимальное количество обрабатываемых сообщений от одного ПА",
       "value": "1000"
     },
-    "addons": ["mongolab:shared-cluster-1"]
+    "addons": ["mongolab:shared-single-small"]
   }
 }

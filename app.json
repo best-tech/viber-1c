@@ -19,6 +19,10 @@
       "description": "Максимальное количество обрабатываемых сообщений от одного ПА",
       "value": "1000"
     },
-    "addons": ["mongolab"]
+    "addons": [
+      {
+        "plan" : "mongolab:sandbox"
+      }
+    ]
   }
 }

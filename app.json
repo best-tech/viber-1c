@@ -4,5 +4,23 @@
   "image": "heroku/php",
   "repository": "https://github.com/1Cmobile/viber-1c",
   "logo": "https://github.com/1Cmobile/viber-1c/blob/master/images/logo.jpg?raw=true",
-  "keywords": ["viber", "1c", "1c-enterprise"]
+  "keywords": ["viber", "1c", "1c-enterprise"],
+   "env": {
+    "MONGODB_URI": {
+      "description": "Путь к базе данных MongoDB",
+      "generator": ""
+    },
+    "DEBUG": {
+      "description": "Флаг вывода отладочных сообщений",
+      "value": "0"
+    },
+    "MAX_FILE_SIZE": {
+      "description": "Максимальный размер файла, байт",
+      "value": "307200"
+    },
+    "COUNT_USER_QUERY": {
+      "description": "Максимальное количество обрабатываемых сообщений от отдного ПА",
+      "value": "1000"
+    }
+  }
 }

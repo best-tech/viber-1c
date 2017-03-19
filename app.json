@@ -3,6 +3,7 @@
   "description": "Viber буфер. Промежуточное хранение Вайбер сообщений.",
   "image": "heroku/php",
   "repository": "https://github.com/1Cmobile/viber-1c",
+  "website": "http://4098.ru/viber-1c",
   "logo": "https://github.com/1Cmobile/viber-1c/blob/master/images/logo.jpg?raw=true",
   "keywords": ["viber", "1c", "1c-enterprise"],
    "env": {
@@ -18,11 +19,6 @@
       "description": "Максимальное количество обрабатываемых сообщений от одного ПА",
       "value": "1000"
     },
-    "addons": [
-      {
-        "plan": "mongolab:shared-cluster-1",
-        "as": "mongolab"
-      }
-    ]
+    "addons": ["mongolab:shared-cluster-1"]
   }
 }

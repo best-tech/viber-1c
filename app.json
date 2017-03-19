@@ -18,11 +18,12 @@
     "COUNT_USER_QUERY": {
       "description": "Максимальное количество обрабатываемых сообщений от одного ПА",
       "value": "1000"
-    },
-    "addons": [
-      {
-        "plan" : "mongolab:sandbox"
-      }
-    ]
-  }
+    }
+  },
+  "addons": [
+    {
+      "plan" : "mongolab:sandbox"
+    }
+  ]
+  
 }

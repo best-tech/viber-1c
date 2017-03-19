@@ -23,11 +23,11 @@
       "value": "1000"
     },
     "addons": [
-    "openredis",
-    {
-      "plan": "mongolab:shared-single-small",
-      "as": "MONGO"
-    }
-  ],
+      "openredis",
+      {
+        "plan": "mongolab:shared-single-small",
+        "as": "MONGO"
+      }
+    ]
   }
 }

@@ -1,6 +1,8 @@
 <?php
 require('../vendor/autoload.php');
 
+echo getInfo();
+die();
 header('Content-Type: application/json');
 
 $debug = true;
@@ -49,6 +51,24 @@ else
 }
 
 	echo $text;
+
+function getInfo(){
+	
+	$res= "
+	<!DOCTYPE html>
+    <html lang='ru'>
+    <head>
+        <meta charset='UTF-8'>
+        <title>Viber Буфер 1С</title>
+    </head>
+    <body>
+        <iframe src='https://github.com/1Cmobile/viber-1c/blob/master/readme.md'></iframe>
+    </body>
+    </html>	
+	";
+
+	return $res;
+}
 
 function ReadData($limit=10,$noDel)
 {

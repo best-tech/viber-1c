@@ -1,5 +1,8 @@
 {
   "name": "viber-1c",
-  "description": "файл докер",
-  "image": "heroku/php"
+  "description": "Viber буфер. Промежуточное хранение Вайбер сообщений.",
+  "image": "heroku/php",
+  "repository": "https://github.com/1Cmobile/viber-1c",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["viber", "1c", "1c-enterprise"]
 }

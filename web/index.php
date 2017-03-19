@@ -1,9 +1,12 @@
 <?php
 require('../vendor/autoload.php');
 
-// phpinfo();
-	$client = new MongoDB\Client($connectionString);
+$connectionString =  getenv('MONGODB_URI');
+echo $connectionString;
+$client = new MongoDB\Client($connectionString);
+
 die();
+
 header('Content-Type: application/json');
 
 $debug = true;

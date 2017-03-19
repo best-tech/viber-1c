@@ -8,7 +8,7 @@
    "env": {
     "MONGODB_URI": {
       "description": "Путь к базе данных MongoDB",
-      "generator": ""
+      "generator": "Адсрес монго"
     },
     "DEBUG": {
       "description": "Флаг вывода отладочных сообщений",
@@ -19,8 +19,15 @@
       "value": "307200"
     },
     "COUNT_USER_QUERY": {
-      "description": "Максимальное количество обрабатываемых сообщений от отдного ПА",
+      "description": "Максимальное количество обрабатываемых сообщений от одного ПА",
       "value": "1000"
+    },
+    "addons": [
+    "openredis",
+    {
+      "plan": "mongolab:shared-single-small",
+      "as": "MONGO"
     }
+  ],
   }
 }

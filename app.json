@@ -1,0 +1,5 @@
+{
+  "name": "viber-1c",
+  "description": "файл докер",
+  "image": "heroku/php"
+}

@@ -3,6 +3,6 @@
   "description": "Viber буфер. Промежуточное хранение Вайбер сообщений.",
   "image": "heroku/php",
   "repository": "https://github.com/1Cmobile/viber-1c",
-  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "logo": "https://github.com/1Cmobile/viber-1c/blob/master/images/logo.jpg?raw=true",
   "keywords": ["viber", "1c", "1c-enterprise"]
 }

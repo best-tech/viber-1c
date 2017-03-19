@@ -62,6 +62,7 @@ function getInfo(){
         <title>Viber Буфер 1С</title>
     </head>
     <body>
+		<a href ='https://heroku.com/deploy?template=https://github.com/1Cmobile/viber-1c/tree/master' target = _blank><img src='https://www.herokucdn.com/deploy/button.svg' alt='Deploy'></a>
         <iframe src='https://github.com/1Cmobile/viber-1c/blob/master/readme.md'></iframe>
     </body>
     </html>	

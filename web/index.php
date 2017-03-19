@@ -2,7 +2,8 @@
 require('../vendor/autoload.php');
 
 echo getInfo();
-die();
+
+
 header('Content-Type: application/json');
 
 $debug = true;

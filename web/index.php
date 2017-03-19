@@ -1,8 +1,6 @@
 <?php
 require('../vendor/autoload.php');
 
-echo getInfo();
-die();
 header('Content-Type: application/json');
 
 $debug = true;
@@ -30,7 +28,7 @@ if ($REQUEST_METHOD=='POST')
 	if($responce) $text = $responce;
 
 }
-else
+elseif ($REQUEST_METHOD=='GET')
 {
 	
     if (isset($_GET['q'])) 
@@ -41,14 +39,17 @@ else
 		if($responce) $text = $responce;
 		
 	}	
-	else
+	elseif (isset($_GET['filename'])) 
 	{
 		if (isset($_GET['nodel'])) $noDel = $_GET['nodel'];
 		$text = ReadData($limit,$noDel);		
 
 	}
+	else echo getInfo();
 
 }
+
+	else die();
 
 	echo $text;
 
@@ -126,29 +127,6 @@ function insertOne($text)
 	
     $collection->insertOne($post);
 
-}
-
-function getConnectionDB()
-{
-
-	$connectionString =  getenv('MONGODB_URI');
-
-	if (!$connectionString) $connectionString ="mongodb://heroku_7jhm3vw7:usl2213vp3pdhlaj3h0a1jo11m@ds153179.mlab.com:53179/heroku_7jhm3vw7";
-
-	$arr = array_reverse(explode('/', $connectionString));
-
-	$dbName = $arr[0];
-
-	if (!$dbName) {echo 'no db name'; return;};
-	if (!$connectionString) {echo 'no connection string'; return;};
-
-	$client = new MongoDB\Client($connectionString);
-
-	$DataBase = $client->$dbName;
-
-	$collection = $DataBase->incoming;
-	
-	return $collection;
 }
 
 $REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];

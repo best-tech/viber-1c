@@ -1,15 +1,17 @@
 version: '3.0'
 services:
   web:
-    image: 1cmobile/heroku
+    image: 1cmobile/heroku-php
     command: 'bash -c ''vendor/bin/heroku-php-apache2 web/'''
     working_dir: /app/user
     environment:
       PORT: 8080
-      XDEBUG_CONFIG: remote_host=192.168.1.44
+      XDEBUG_CONFIG: remote_host=192.168.57.78
+      http_proxy: http://192.168.57.78:3128 
+      https_proxy: https://192.168.57.78:3128
+      mongodb_proxy: http://192.168.57.78:3128
     ports:
       - '80:8080'
-      - '27017:27017'
     volumes: 
       - ./web:/app/user/web
     env_file:

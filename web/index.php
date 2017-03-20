@@ -1,12 +1,6 @@
 <?php
 require('../vendor/autoload.php');
 
-$connectionString =  getenv('MONGODB_URI');
-echo $connectionString;
-$client = new MongoDB\Client($connectionString);
-
-die();
-
 header('Content-Type: application/json');
 
 $debug = true;
@@ -82,9 +76,10 @@ function ReadData($limit=10,$noDel)
 
 	$arrResult = array();
 
-	$collection = getConnectionDB();
-	if (!$collection) return;
+	$DataBase = getConnectionDB();
+	if (!$DataBase) die('no db connection');
 
+	$collection = $DataBase->messages;
 
 	$arrOrder = array('time' => 1);
 
@@ -330,7 +325,8 @@ function insertOnefile($baseText,$authDate,$filename,$unicname)
 function getConnectionDB()
 {
 	$connectionString =  getenv('MONGODB_URI');
-	$arr = array_reverse(explode('/', $connectionString));
+	$connectionString = str_replace("'","",$connectionString);
+  $arr = array_reverse(explode('/', $connectionString));
 	$dbName = $arr[0];
 
 	if (!$dbName) {die('no db name');};

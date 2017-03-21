@@ -1,58 +1,133 @@
 <?php
 require('../vendor/autoload.php');
 
-header('Content-Type: application/json');
-
-$debug = true;
-
-if ($debug)
-{
-	ini_set('display_errors',1);
-	ini_set("error_reporting", E_ALL);
-};
-
-$REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
-
-$limit = 100;
-$noDel = false;
-
-if (isset($_GET['limit'])&&is_int((int) $_GET['limit'])) $limit=(int) $_GET['limit'];
+initialize();
 
 
 if ($REQUEST_METHOD=='POST')
 {
-	$text = (string) implode("", file('php://input'));
 
-	$responce = insertOne($text);
+	header('Content-Type: application/json');
 
-	if($responce) $text = $responce;
+	if (isset($_SERVER['HTTP_FILENAME']))
+	{
+		$filename = $_SERVER['HTTP_FILENAME'];	
+	}
+	elseif (isset(getallheaders()['filename'])) {
+		$filename	= getallheaders()['filename'];
+	}
+	else {
+		CheckViberServer();
+	};
+
+	if ($filename){
+		
+		$authDate = auth();
+
+		if ($countUserFiles && $authDate['login']=='test' && $authDate['QueryCount']>$countUserFiles) {
+			header(' 500 Internal Server Error', true, 500);
+			die("to many post file for test login ");};
+
+		if ((isset($authDate['QueryPerMonth'])&&isset($authDate['QueryMonth']))&&$authDate['QueryPerMonth']>0 && $authDate['QueryMonth']<$authDate['QueryPerMonth']) {
+			header(' 500 Internal Server Error', true, 500);
+			die("to many queries per month ");};
+
+		$baseText = (string) implode("", file('php://input'));
+
+		$unicnameTime= ((string) time());
+
+		$unicname= substr($authDate['paid'],10).$unicnameTime.'-'.$filename;
+
+		$unicname =  substr($unicname,-180);
+
+		$responce = insertOnefile($baseText,$authDate,$filename,$unicname);
+
+		echo $unicname;
+
+	}
+	else{
+		
+		$text = (string) implode("", file('php://input'));
+
+		$responce = insertOne($text);
+
+		if($responce) $text = $responce;
+		
+	};
+	
+
+
 
 }
 elseif ($REQUEST_METHOD=='GET')
 {
 	
-    if (isset($_GET['q'])) 
-	{
-		$text = $_GET['q'];
-		$responce = insertOne($text);
+	if (isset($_GET['service'])) {
+		service();
+		header('Content-Type: application/json');
+		echo 'service';
+		return;
+	}
+	elseif (isset($_GET['filename'])){
 
-		if($responce) $text = $responce;
+		$file = getFile($_GET['filename']);
+
+		// header('Content-Type: application/x-unknown');
+		header("Content-Disposition: attachment; filename=".$file['filename']); 
+		$file = base64_decode($file['content']);
+				
+	 }
+	elseif( isset($_SERVER['PHP_AUTH_USER']) ){
 		
-	}	
-	elseif (isset($_GET['filename'])) 
-	{
-		if (isset($_GET['nodel'])) $noDel = $_GET['nodel'];
-		$text = ReadData($limit,$noDel);		
+		$authDate = auth();
+		
+		header('Content-Type: application/json');
+		$text = ReadData();
+	}
+
+	else{
+
+		$text = getInfo(); 
 
 	}
-	else echo getInfo();
+	
+	
+};
+
+echo $text;
+
+
+
+function initialize(){
+
+	$debug = getenv('DEBUG');
+	$REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
+	$noDel = false;
+
+	$limit = 100 ;
+	if (isset($_GET['limit'])&&is_int((int) $_GET['limit'])) {
+		$limit= (int) $_GET['limit'];
+	}
+
+	$countUserFiles = getenv('COUNT_USER_FILES');
+	
+	$countUserQuery = getenv('COUNT_USER_QUERY');
+	
+	if (!$countUserQuery) $countUserQuery = 1000;
+
+	if ($debug)
+	{
+		ini_set('display_errors',1);
+		ini_set("error_reporting", E_ALL);
+		$noDel = true;
+	};
 
 }
 
-	else die();
+function CheckViberServer(){
 
-	echo $text;
-
+	die('it is not Viber man');
+}
 function getInfo(){
 	
 	$res= "
@@ -71,6 +146,7 @@ function getInfo(){
 	return $res;
 }
 
+}
 function ReadData($limit=10,$noDel)
 {
 
@@ -130,63 +206,7 @@ function insertOne($text)
 
 }
 
-$REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
 
-if ($REQUEST_METHOD=='POST')
-{
-	$authDate = auth();
-	$countUserQuery = getenv('COUNT_USER_QUERY');
-
-	if ($authDate['login']=='test'&&$authDate['QueryCount']>$countUserQuery) {
-		header(' 500 Internal Server Error', true, 500);
-		die("to many queries for test login ");};
-
-	if ((isset($authDate['QueryPerMonth'])&&isset($authDate['QueryMonth']))&&$authDate['QueryPerMonth']>0 && $authDate['QueryMonth']<$authDate['QueryPerMonth']) {
-		header(' 500 Internal Server Error', true, 500);
-		die("to many queries per month ");};
-
-	if (isset($_SERVER['HTTP_FILENAME']))
-	{
-		$filename = $_SERVER['HTTP_FILENAME'];	
-	}
-	elseif (isset(getallheaders()['filename'])) {
-		$filename	= getallheaders()['filename'];
-	}
-	else {
-		header(' 500 Internal Server Error', true, 500);
-		die("need to filename on headers");
-	};
-
-
-	$baseText = (string) implode("", file('php://input'));
-
-	$unicnameTime= ((string) time());
-	$unicname= substr($authDate['paid'],10).$unicnameTime.'-'.$filename;
-
-	$unicname =  substr($unicname,-180);
-
-	$responce = insertOnefile($baseText,$authDate,$filename,$unicname);
-
-	echo $unicname;
-}
-
-else
-{
-	if (isset($_GET['service'])) {
-		service();
-		echo 'service';
-		return;
-	}
-	
-	if (!isset($_GET['filename'])) die('need to &filename');
-
-	$file = getFile($_GET['filename']);
-
-	// header('Content-Type: application/x-unknown');
-	header("Content-Disposition: attachment; filename=".$file['filename']); 
-	echo base64_decode($file['content']);
-
-}
 
 function service(){
 
@@ -354,5 +374,4 @@ function getPAID(){
 	$paid = str_replace("pa:","",$paid);
 	return $paid;
 }
-?>
 ?>

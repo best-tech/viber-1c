@@ -5,7 +5,9 @@ $REQUEST_METHOD = "";
 $countUserFiles = 0;
 $countUserQuery = 0;
 $text           = 0;
+$lengthFile 	= 0;
 $noDel 			= false;
+$paid 			= false;
 
 initialize();
 
@@ -18,24 +20,13 @@ if ($REQUEST_METHOD=='POST')
 	{
 		$filename = $_SERVER['HTTP_FILENAME'];	
 	}
-	elseif (isset(getallheaders()['filename'])) {
-		$filename	= getallheaders()['filename'];
-	}
 	else {
 		CheckViberServer();
 	};
 
 	if ($filename){
 		
-		$authDate = auth();
-
-		if ($countUserFiles && $authDate['login']=='test' && $authDate['QueryCount']>$countUserFiles) {
-			header(' 500 Internal Server Error', true, 500);
-			die("to many post file for test login ");};
-
-		if ((isset($authDate['QueryPerMonth'])&&isset($authDate['QueryMonth']))&&$authDate['QueryPerMonth']>0 && $authDate['QueryMonth']<$authDate['QueryPerMonth']) {
-			header(' 500 Internal Server Error', true, 500);
-			die("to many queries per month ");};
+		$authDate = auth(true);
 
 		$baseText = (string) implode("", file('php://input'));
 
@@ -77,12 +68,17 @@ elseif ($REQUEST_METHOD=='GET')
 
 		$file = getFile($_GET['filename']);
 
-		// header('Content-Type: application/x-unknown');
 		header("Content-Disposition: attachment; filename=".$file['filename']); 
-		$file = base64_decode($file['content']);
+		header('Content-Type: image/jpg');
+		if ($file['encodet']){
+			$text = base64_decode($file['content']);
+		}
+		else{
+			$text = $file['content'];
+		}
 				
 	 }
-	elseif( isset($_SERVER['PHP_AUTH_USER']) ){
+	elseif( $paid ){
 		
 		$authDate = auth();
 		
@@ -104,7 +100,7 @@ echo $text;
 
 function initialize(){
 
-	global $REQUEST_METHOD, $countUserFiles, $countUserQuery, $noDel;
+	global $REQUEST_METHOD, $countUserFiles, $countUserQuery, $noDel, $lengthFile, $paid ;
 
 	$REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
 		
@@ -117,12 +113,14 @@ function initialize(){
 	};
 
 	$noDel = false;
-
-	$limit = 100 ;
 	
 	$countUserFiles = getenv('COUNT_USER_FILES');
 	
 	$countUserQuery = getenv('COUNT_USER_QUERY');
+	
+	$lengthFile 	= getenv('MAX_FILE_SIZE');
+
+	$paid = $_SERVER['HTTP_PAID'];
 
 }
 
@@ -148,8 +146,9 @@ function getInfo(){
 	return $res;
 }
 
-function ReadData($limit=10,$noDel)
+function ReadData()
 {
+	global $noDel;
 
 	$arrResult = array();
 
@@ -160,9 +159,9 @@ function ReadData($limit=10,$noDel)
 
 	$arrOrder = array('time' => 1);
 
-	$arrSort = array("limit" => $limit,"sort" => $arrOrder);
+	$arrSort = array("limit" => 100,"sort" => $arrOrder);
 
-	$cursor = $collection->find([], ['limit' => $limit, 'sort' => ['time' => 1]]);
+	$cursor = $collection->find([], $arrSort);
 
 	foreach ($cursor as $document) {
 		
@@ -207,8 +206,6 @@ function insertOne($text)
 
 }
 
-
-
 function service(){
 
 	$DataBase = getConnectionDB();
@@ -224,7 +221,7 @@ function service(){
 	
 }
 
-function getUserAccount($paid,$login,$pass){
+function getUserAccount($paid,$workWithFiles=false){
 
 	$DataBase = getConnectionDB();
 	
@@ -251,9 +248,15 @@ function getUserAccount($paid,$login,$pass){
 		}
 	}
 	
-	if(!$tempUser['login']==$login||!$tempUser['pass']==$pass) { die("Access forbidden");};
+	//if(!$tempUser['login']==$login||!$tempUser['pass']==$pass) { die("Access forbidden");};
+	if ($workWithFiles)
+	{
+		$tempUser['CountFiles'] = $tempUser['CountFiles']+1;
+	}
+	else{
 
-	$tempUser['QueryCount'] = $tempUser['QueryCount']+1;
+		$tempUser['QueryCount'] = $tempUser['QueryCount']+1;
+	}
 
 	$user = $users->updateOne(['paid' => $paid],['$set' => $tempUser]);
 
@@ -267,31 +270,49 @@ function getTemplateUser()
 	$arrTemp['QueryCount'] 		=0;
 	$arrTemp['login'] 			='';
 	$arrTemp['pass'] 			='';
-	$arrTemp['QueryPerMonth'] 	=0;
-	$arrTemp['QueryMonth'] 		=0;
+	$arrTemp['CountFiles']		=0;
 
 	return $arrTemp;
 }
 
-function auth() {
+function auth($WorkWithFile=false) {
 
-	$paid = getPAID();
+	global $paid;
 
-  if (!isset($_SERVER['PHP_AUTH_USER'])||!isset($_SERVER['PHP_AUTH_PW'])) {
-	 header('WWW-Authenticate: Basic realm="viber-1c.herokuapp.com - need to login');
-     header('HTTP/1.0 401 Unauthorized');
-     echo "Вы должны ввести корректный логин и пароль для получения доступа к ресурсу \n";
-     die("Access forbidden");
-   } 
-   else {
-    
-	$login 	= $_SERVER['PHP_AUTH_USER'];
-	$pass 	= $_SERVER['PHP_AUTH_PW']; 
+	$login 	= getenv('LOGIN');
+	$pass 	= getenv('PASS');
 
-	$UserAccount = getUserAccount($paid,$login,$pass);
+	$currenntLogin 	= "" || isset($_SERVER['PHP_AUTH_USER']);
+	$currenntPass 	= "" || isset($_SERVER['PHP_AUTH_PW']);
 
-	return $UserAccount;
-   };
+	$UserAccount = getUserAccount($paid,$WorkWithFile);
+
+	if (($login||$pass) && !isset($_SERVER['PHP_AUTH_USER'])||!isset($_SERVER['PHP_AUTH_PW'])) {
+	 	header('WWW-Authenticate: Basic realm="viber-1c.herokuapp.com - need to login');
+     	header('HTTP/1.0 401 Unauthorized');
+     	echo "Вы должны ввести корректный логин и пароль для получения доступа к ресурсу \n";
+     	die("Access forbidden");
+   	} 
+
+	if (!$login=$currenntLogin || !$currenntPass=$pass) {
+			header('WWW-Authenticate: Basic realm="viber-1c.herokuapp.com - need to login');
+			header('HTTP/1.0 401 Unauthorized');
+			echo "Не верный логин или пароль \n";
+			die("Access forbidden");
+		} 
+
+	if ($WorkWithFile){
+		global $countUserFiles;
+		if ($countUserFiles && $authDate['CountFiles']>$countUserFiles) {
+			header(' 500 Internal Server Error', true, 500);
+			die("to many post file for this paid ");};
+	}
+	else{
+		global $countUserQuery;
+		if ($countUserQuery && $authDate['QueryCount']>$countUserQuery) {
+			header(' 500 Internal Server Error', true, 500);
+			die("to many queries to this login ");};
+	};
 
 }
   
@@ -303,16 +324,22 @@ function getFile($filename)
 	$files = $DataBase->files;
 
 	$document = $files->findOne(['unicname' =>$filename]);
-
 	if (!$document)
 	{	
-		$files = $DataBase->settings;
-		$document = $files->findOne(['key' =>"notfound"]);
+		
+		$imgData = file_get_contents("images/404.jpg");
+		$document['content'] = $imgData;
+		$document['encodet'] = false;
+		$document['filename'] = 'file_not_found.jpg';
 
 	}
-	
+	else
+	{
+		$document['encodet'] = true;
+	}
 	$arrResult['content'] = $document['content'];
 	$arrResult['filename'] = $document['filename'];
+	$arrResult['encodet'] = $document['encodet'];
 
 	return $arrResult;
 
@@ -322,11 +349,9 @@ function insertOnefile($baseText,$authDate,$filename,$unicname)
 {
 	if(!$baseText) die('no incoming data');
 	
-	$lengthFile = getenv('MAX_FILE_SIZE');
+	global $lengthFile;
 
-	if (!$lengthFile) $lengthFile = 30200;
-
-	if (strlen($baseText)>$lengthFile) die('file is too large');
+	if ($lengthFile>0 && strlen($baseText)>$lengthFile) die('file is too large');
 
 	$DataBase = getConnectionDB();
 	$files = $DataBase->files;
@@ -347,7 +372,7 @@ function getConnectionDB()
 {
 	$connectionString =  getenv('MONGODB_URI');
 	$connectionString = str_replace("'","",$connectionString);
-  $arr = array_reverse(explode('/', $connectionString));
+  	$arr = array_reverse(explode('/', $connectionString));
 	$dbName = $arr[0];
 
 	if (!$dbName) {die('no db name');};
@@ -358,21 +383,4 @@ function getConnectionDB()
 	return $DataBase;
 }
 
-function getPAID(){
-
-	if (isset($_SERVER['HTTP_PAID']))
-	{
-		$paid = $_SERVER['HTTP_PAID'];	
-	}
-	elseif (isset(getallheaders()['paid'])) {
-		$paid	= getallheaders()['paid'];
-	}
-	else {
-		header(' 500 Internal Server Error', true, 500);
-		die("need to id pablic account");
-	};
-
-	$paid = str_replace("pa:","",$paid);
-	return $paid;
-}
 ?>

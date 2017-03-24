@@ -11,13 +11,25 @@
       "description": "Флаг вывода отладочных сообщений",
       "value": "0"
     },
+    "LOGIN": {
+      "description": "Имя пользователя",
+      "value": "test"
+    },
+    "PASS": {
+      "description": "Пароль пользователя",
+      "value": "test"
+    },
     "MAX_FILE_SIZE": {
       "description": "Максимальный размер файла, байт",
-      "value": "307200"
+      "value": "0"
     },
     "COUNT_USER_QUERY": {
       "description": "Максимальное количество обрабатываемых сообщений от одного ПА",
-      "value": "1000"
+      "value": "0"
+    },
+    "COUNT_USER_FILES": {
+      "description": "Максимальное количество сохраняемых файлов",
+      "value": "0"
     }
   },
   "addons": [

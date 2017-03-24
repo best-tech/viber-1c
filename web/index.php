@@ -1,8 +1,13 @@
 <?php
 require('../vendor/autoload.php');
 
-initialize();
+$REQUEST_METHOD = "";
+$countUserFiles = 0;
+$countUserQuery = 0;
+$text           = 0;
+$noDel 			= false;
 
+initialize();
 
 if ($REQUEST_METHOD=='POST')
 {
@@ -97,30 +102,27 @@ elseif ($REQUEST_METHOD=='GET')
 echo $text;
 
 
-
 function initialize(){
 
-	$debug = getenv('DEBUG');
+	global $REQUEST_METHOD, $countUserFiles, $countUserQuery, $noDel;
+
 	$REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
-	$noDel = false;
-
-	$limit = 100 ;
-	if (isset($_GET['limit'])&&is_int((int) $_GET['limit'])) {
-		$limit= (int) $_GET['limit'];
-	}
-
-	$countUserFiles = getenv('COUNT_USER_FILES');
-	
-	$countUserQuery = getenv('COUNT_USER_QUERY');
-	
-	if (!$countUserQuery) $countUserQuery = 1000;
-
+		
+	$debug = getenv('DEBUG');
 	if ($debug)
 	{
 		ini_set('display_errors',1);
 		ini_set("error_reporting", E_ALL);
 		$noDel = true;
 	};
+
+	$noDel = false;
+
+	$limit = 100 ;
+	
+	$countUserFiles = getenv('COUNT_USER_FILES');
+	
+	$countUserQuery = getenv('COUNT_USER_QUERY');
 
 }
 
@@ -138,7 +140,7 @@ function getInfo(){
         <title>Viber Буфер 1С</title>
     </head>
     <body>
-		<script src='https://gist.github.com/1Cmobile/57ad9ccfa9405a4d028296d4d6e9694d.js'></script>
+		<script src='https://gist.github.com/best-tech/57ad9ccfa9405a4d028296d4d6e9694d.js'></script>
     </body>
     </html>	
 	";
@@ -146,7 +148,6 @@ function getInfo(){
 	return $res;
 }
 
-}
 function ReadData($limit=10,$noDel)
 {
 

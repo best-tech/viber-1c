@@ -119,9 +119,9 @@ function initialize(){
 	
 	$paid = isset($_SERVER['HTTP_PAID']) ? $_SERVER['HTTP_PAID'] : "";
 
-	if (!$paid){
+	if (!$paid||$paid=""){
 		
-		$paid = isset($_GET['paid']) ? $_GET['paid'] : "";
+		$paid = isset($_REQUEST['paid']) ? $_REQUEST['paid'] : "";
 		
 	}
 	

@@ -83,7 +83,7 @@ elseif ($REQUEST_METHOD=='GET')
 		$authDate = auth();
 		
 		header('Content-Type: application/json');
-		$text = ReadData();
+		$text = ReadMessages();
 	}
 
 	else{
@@ -120,7 +120,7 @@ function initialize(){
 	
 	$lengthFile 	= getenv('MAX_FILE_SIZE');
 
-	$paid = $_SERVER['HTTP_PAID'];
+	$paid = isset($_SERVER['HTTP_PAID']) ? $_SERVER['HTTP_PAID'] : "";
 
 }
 
@@ -146,15 +146,14 @@ function getInfo(){
 	return $res;
 }
 
-function ReadData()
+function ReadMessages()
 {
 	global $noDel;
 
 	$arrResult = array();
 
 	$DataBase = getConnectionDB();
-	if (!$DataBase) die('no db connection');
-
+	
 	$collection = $DataBase->messages;
 
 	$arrOrder = array('time' => 1);
@@ -279,6 +278,12 @@ function auth($WorkWithFile=false) {
 
 	global $paid;
 
+	if (!$paid) {
+		header('WWW-Authenticate: Basic realm="viber-1c.herokuapp.com - need to login');
+		header('HTTP/1.0 401 Unauthorized');
+		die("not user id params");
+	};
+
 	$login 	= getenv('LOGIN');
 	$pass 	= getenv('PASS');
 
@@ -380,6 +385,9 @@ function getConnectionDB()
 	if (!$connectionString) {die('no connection string');};
 	$client = new MongoDB\Client($connectionString);
 	$DataBase = $client->$dbName;
+
+	if (!$DataBase) die('no db connection');
+
 	return $DataBase;
 }
 

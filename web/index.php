@@ -117,17 +117,13 @@ function initialize(){
 	
 	$lengthFile 	= getenv('MAX_FILE_SIZE');
 	
-	if ($REQUEST_METHOD=='POST'){
-		
-		$paid = isset($_SERVER['HTTP_PAID']) ? $_SERVER['HTTP_PAID'] : "";
-		
-	}
-	elseif ($REQUEST_METHOD=='GET'){
+	$paid = isset($_SERVER['HTTP_PAID']) ? $_SERVER['HTTP_PAID'] : "";
+
+	if (!$paid){
 		
 		$paid = isset($_GET['paid']) ? $_GET['paid'] : "";
 		
 	}
-	;
 	
 }
 

@@ -7,7 +7,6 @@ $countUserQuery = 0;
 $text           = 0;
 $lengthFile 	= 0;
 $noDel 			= false;
-
 $paid 			= "";
 
 initialize();
@@ -104,7 +103,7 @@ function initialize(){
 	$debug = getenv('DEBUG');
 	
 	if ($debug){
-
+		
 		ini_set('display_errors',1);
 		ini_set("error_reporting", E_ALL);
 		$noDel = true;
@@ -120,65 +119,61 @@ function initialize(){
 	
 	$paid = isset($_SERVER['HTTP_PAID']) ? $_SERVER['HTTP_PAID'] : "";
 	
-	if (!$paid||$paid==""){
-				
-		$paid = isset($_REQUEST['paid']) ? $_REQUEST['paid'] : "";
-		
-	}
-
-	
 }
 
 function CheckViberServer(){
-
+	
 	$isCorrect = true;
 	$incorrectMessage = '';
 	if (!isset($_SERVER['HTTP_X_FORWARDED_PORT'])){
 		
 		$isCorrect = false;
 		$incorrectMessage = 'it is not https remote';
-
+		
 	}
-
+	
 	if (!isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
 		
 		$isCorrect = false;
 		$incorrectMessage = 'it is not viber ip remote';
-
+		
 	}
-
+	
 	if (!$_SERVER['HTTP_X_FORWARDED_PORT'] = "443"){
 		
 		$isCorrect = false;
 		$incorrectMessage = 'it is not https 443';
-
+		
 	}
-
+	
 	$vibersIP = '52.0.253.';
 	$curIP = $_SERVER['HTTP_X_FORWARDED_FOR'];
 	if (!substr($curIP,0,9)==$vibersIP){
 		
 		$isCorrect = false;
 		$incorrectMessage = 'it is not viber ip remote';
-
+		
 	}
-
+	
 	if (!$isCorrect)
-	{
+		{
 		$DataBase = getConnectionDB();
-		
 		$collection = $DataBase->logs;
-
-		
-		$post = array(
-						'time'     => time(),
-						'server'     	=> $_SERVER
-				);
-		
+		$post = array('time'     => time(),'server'     	=> $_SERVER	);
 		$collection->insertOne($post);
 		die($incorrectMessage);
 	}
+	else
+	{
+		$DataBase = getConnectionDB();
+		$collection = $DataBase->logs;
+		$post = array('time'     => time(),'server'     	=> $_SERVER	);
+		$collection->insertOne($post);
+		
+		global $paid;
 
+	}
+	
 }
 function getInfo(){
 	
@@ -251,12 +246,12 @@ function insertOne($text)
 	$collection = $DataBase->messages;
 	
 	$post = array('time'     => time(),
-											'event'     	=> $jsObject['event'],
-											'paid'     		=> $paid,
-											'timestamp'     => $jsObject['timestamp'],
-											'message_token' => $jsObject['message_token'],
-											'content'   	=> $text
-								);
+												'event'     	=> $jsObject['event'],
+												'paid'     		=> $paid,
+												'timestamp'     => $jsObject['timestamp'],
+												'message_token' => $jsObject['message_token'],
+												'content'   	=> $text
+									);
 	
 	$collection->insertOne($post);
 	
@@ -288,13 +283,13 @@ function getUserAccount($paid,$workWithFiles=false){
 	$tempUser = getTemplateUser();
 	
 	if (!$user){
-	
-			$user = $tempUser;
-			$user['paid'] 	= $paid;
-			
-			$users->insertOne($user);
-			
-			$tempUser = $user;
+		
+		$user = $tempUser;
+		$user['paid'] 	= $paid;
+		
+		$users->insertOne($user);
+		
+		$tempUser = $user;
 	}
 	else{
 		
@@ -337,7 +332,7 @@ function auth($WorkWithFile=false) {
 		echo "for login you need paid \n";
 		die("Access forbidden");
 	}
-
+	
 	$login 	= getenv('LOGIN');
 	$pass 	= getenv('PASS');
 	
@@ -424,10 +419,10 @@ function insertOnefile($baseText,$authDate,$filename,$unicname)
 	$files = $DataBase->files;
 	
 	$post = array('time'     	=> time(),
-											'unicname'   	=> $unicname,
-											'filename'   	=> $filename,
-											'paid'     	=> $authDate['paid'],
-											'content'   	=> $baseText);
+												'unicname'   	=> $unicname,
+												'filename'   	=> $filename,
+												'paid'     	=> $authDate['paid'],
+												'content'   	=> $baseText);
 	
 	$files->insertOne($post);
 	

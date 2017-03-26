@@ -327,6 +327,13 @@ function auth($WorkWithFile=false) {
 	
 	global $paid;
 	
+	if (!$paid) {
+		header('WWW-Authenticate: Basic realm="viber-1c.herokuapp.com - need to login');
+		header('HTTP/1.0 401 Unauthorized');
+		echo "for login you need paid \n";
+		die("Access forbidden");
+	}
+
 	$login 	= getenv('LOGIN');
 	$pass 	= getenv('PASS');
 	

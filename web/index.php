@@ -132,20 +132,55 @@ function initialize(){
 }
 
 function CheckViberServer(){
-	
-	$DataBase = getConnectionDB();
-	
-	$collection = $DataBase->logs;
 
-	
-	$post = array(
-					'time'     => time(),
-					'server'     	=> $_SERVER
-			);
-	
-	$collection->insertOne($post);
+	$isCorrect = true;
+	$incorrectMessage = '';
+	if (!isset($_SERVER['HTTP_X_FORWARDED_PORT'])){
+		
+		$isCorrect = false;
+		$incorrectMessage = 'it is not https remote';
 
-	//die('it is not Viber man');
+	}
+
+	if (!isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+		
+		$isCorrect = false;
+		$incorrectMessage = 'it is not viber ip remote';
+
+	}
+
+	if (!$_SERVER['HTTP_X_FORWARDED_PORT'] = "443"){
+		
+		$isCorrect = false;
+		$incorrectMessage = 'it is not https 443';
+
+	}
+
+	$vibersIP = '52.0.253.';
+	$curIP = $_SERVER['HTTP_X_FORWARDED_FOR'];
+	if (!substr($curIP,0,9)==$vibersIP){
+		
+		$isCorrect = false;
+		$incorrectMessage = 'it is not viber ip remote';
+
+	}
+
+	if (!$isCorrect)
+	{
+		$DataBase = getConnectionDB();
+		
+		$collection = $DataBase->logs;
+
+		
+		$post = array(
+						'time'     => time(),
+						'server'     	=> $_SERVER
+				);
+		
+		$collection->insertOne($post);
+		die($incorrectMessage);
+	}
+
 }
 function getInfo(){
 	

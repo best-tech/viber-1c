@@ -229,6 +229,8 @@ function ReadData()
 }
 function insertOne($text)
 {
+	global $paid;
+	
 	if(!$text) return 'no incoming data';
 	
 	try {

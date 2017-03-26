@@ -7,7 +7,8 @@ $countUserQuery = 0;
 $text           = 0;
 $lengthFile 	= 0;
 $noDel 			= false;
-$paid 			= false;
+
+$paid 			= "";
 
 initialize();
 
@@ -118,12 +119,13 @@ function initialize(){
 	$lengthFile 	= getenv('MAX_FILE_SIZE');
 	
 	$paid = isset($_SERVER['HTTP_PAID']) ? $_SERVER['HTTP_PAID'] : "";
-
-	if (!$paid||$paid=""){
-		
+	
+	if (!$paid||$paid==""){
+				
 		$paid = isset($_REQUEST['paid']) ? $_REQUEST['paid'] : "";
 		
 	}
+
 	
 }
 
@@ -198,7 +200,7 @@ function getInfo(){
 
 function ReadData()
 {
-	global $noDel;
+	global $noDel,$paid;
 	
 	$arrResult = array();
 	

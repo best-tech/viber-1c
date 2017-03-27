@@ -167,6 +167,13 @@ function CheckViberServer(){
 	else{
 
 		$paid = substr($_SERVER['QUERY_STRING'],5);
+
+        $numV = strpos($paid,'?');
+        
+        if (!$numV===false){
+            $paid = substr($paid ,$numV);
+        }
+        
 	}
 
 	if (!$isCorrect)

@@ -171,7 +171,7 @@ function CheckViberServer(){
         $numV = strpos($paid,'?');
         
         if (!$numV===false){
-            $paid = substr($paid,0,$numV-1);
+            $paid = substr($paid,0,$numV);
         }
         
 	}

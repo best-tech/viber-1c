@@ -173,7 +173,7 @@ function CheckViberServer(){
 		{
 		$DataBase = getConnectionDB();
 		$collection = $DataBase->logs;
-		$post = array('time'     => time(),'server'     	=> $_SERVER	);
+		$post = array('time'     => time(),'message' => $incorrectMessage,'server'     	=> $_SERVER	);
 		$collection->insertOne($post);
 		die($incorrectMessage);
 	}

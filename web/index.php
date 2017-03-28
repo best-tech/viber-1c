@@ -4,7 +4,7 @@ require('../vendor/autoload.php');
 $REQUEST_METHOD = "";
 $countUserFiles = 0;
 $countUserQuery = 0;
-$text           = 0;
+$text           = "";
 $lengthFile 	= 0;
 $noDel 			= false;
 $paid 			= "";

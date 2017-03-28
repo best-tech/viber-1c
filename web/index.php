@@ -22,13 +22,15 @@ if ($REQUEST_METHOD=='POST')
 		
 		if ($filename){
 			
+			global $paid;
+
 			$authDate = auth(true);
 			
 			$baseText = (string) implode("", file('php://input'));
 			
 			$unicnameTime= ((string) time());
 			
-			$unicname= substr($authDate['paid'],10).$unicnameTime.'-'.$filename;
+			$unicname= $paid.$unicnameTime.'-'.$filename;
 			
 			$unicname =  substr($unicname,-180);
 			

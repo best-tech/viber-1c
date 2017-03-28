@@ -200,6 +200,7 @@ function getInfo(){
     <html lang='ru'>
     <head>
         <meta charset='UTF-8'>
+		<meta name='viewport content='width=device-width, initial-scale=1, maximum-scale=1'>
         <title>Viber Буфер 1С</title>
         <link rel='shorkcut icon' href='/images/favicon.ico'>
         <link rel='icon' type='image/gif' href='/images/animated_favicon1.gif'>

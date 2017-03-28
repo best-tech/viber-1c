@@ -201,9 +201,9 @@ function getInfo(){
     <head>
         <meta charset='UTF-8'>
         <title>Viber Буфер 1С</title>
-        <link rel='shorkcut icon' href='images/favicon.ico'>
-        <link rel='icon' type='image/gif' href='images/animated_favicon1.gif'>
-		<link rel='apple-touch-icon' href='images/apple-touch-icon.png' >
+        <link rel='shorkcut icon' href='/images/favicon.ico'>
+        <link rel='icon' type='image/gif' href='/images/animated_favicon1.gif'>
+		<link rel='apple-touch-icon' href='/images/apple-touch-icon.png' >
     </head>
     <body>
 		<script src='https://gist.github.com/best-tech/57ad9ccfa9405a4d028296d4d6e9694d.js'></script>

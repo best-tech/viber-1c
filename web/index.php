@@ -66,17 +66,12 @@ elseif ($REQUEST_METHOD=='GET')
 		
 		$file = getFile($_GET['filename']);
 		
-		header("Content-Disposition: attachment; filename=".$file['filename']);
-		header('Content-Type: image/jpg');
-		if ($file['encodet']){
-			$text = base64_decode($file['content']);
-		}
-		else{
-			$text = $file['content'];
-		}
+		//header("Content-Disposition: attachment; filename=".$file['filename']);
+		header('Content-Type: image/jpeg');
 		
-	}
-	elseif( $paid ){
+		$text = base64_decode($file['content']);
+		
+	}elseif( $paid ){
 		
 		$authDate = auth();
 		
@@ -272,7 +267,7 @@ function insertOne($text)
 	$post = array('time'     => time(),
 												'event'     	=> $jsObject['event'],
 												'paid'     		=> $paid,
-												'timestamp'     => $jsObject['timestamp'],
+												'time'     		=> $jsObject['timestamp'],
 												'message_token' => $jsObject['message_token'],
 												'content'   	=> $text
 									);
@@ -292,6 +287,12 @@ function service(){
 	$deleteFilter = ['time' =>['$lt'=>$curTime]];
 	
 	$cursor = $files->deleteMany($deleteFilter);
+
+	$messages = $DataBase->messages;
+		
+	$deleteFilter = ['time' =>['$lt'=>$curTime]];
+	
+	$cursor = $messages->deleteMany($deleteFilter);
 	
 	
 }
@@ -410,21 +411,24 @@ function getFile($filename)
 	
 	if (!$document){
 		
-		$imgData = file_get_contents("images/404.jpg");
+		$img_file = 'images/404.jpg';
+		
+		$fp = fopen($img_file,"rb", 0);
+		$rhandle = fread($fp,filesize($img_file));
+		
+		$imgData = base64_encode($rhandle);
+
 		$document['content'] = $imgData;
-		$document['encodet'] = false;
 		$document['filename'] = 'file_not_found.jpg';
 		
 	}
 	
 	else{
 		
-		$document['encodet'] = true;
 	}
 	
 	$arrResult['content'] = $document['content'];
 	$arrResult['filename'] = $document['filename'];
-	$arrResult['encodet'] = $document['encodet'];
 	
 	return $arrResult;
 	

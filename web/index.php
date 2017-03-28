@@ -201,7 +201,8 @@ function getInfo(){
     <head>
         <meta charset='UTF-8'>
         <title>Viber Буфер 1С</title>
-        <link rel='icon' href='images/favicon.ico'>
+        <link rel='shorkcut icon' href='images/favicon.ico'>
+        <link rel='icon' type='image/gif' href='images/favicon.ico'>
     </head>
     <body>
 		<script src='https://gist.github.com/best-tech/57ad9ccfa9405a4d028296d4d6e9694d.js'></script>

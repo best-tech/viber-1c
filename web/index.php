@@ -434,7 +434,10 @@ function insertOnefile($baseText,$authDate,$filename,$unicname)
 	
 	global $lengthFile;
 	
-	if ($lengthFile>0 && strlen($baseText)>$lengthFile) die('file is too large');
+	if ($lengthFile>0 && strlen($baseText)>$lengthFile){
+		header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+		die('file is too large');
+	} 
 	
 	$DataBase = getConnectionDB();
 	

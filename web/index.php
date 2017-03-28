@@ -202,7 +202,7 @@ function getInfo(){
         <meta charset='UTF-8'>
         <title>Viber Буфер 1С</title>
         <link rel='shorkcut icon' href='images/favicon.ico'>
-        <link rel='icon' type='image/gif' href='images/fanimated_favicon1.gif'>
+        <link rel='icon' type='image/gif' href='images/animated_favicon1.gif'>
 		<link rel='apple-touch-icon' href='images/apple-touch-icon.png' >
     </head>
     <body>

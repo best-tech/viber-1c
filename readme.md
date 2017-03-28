@@ -2,7 +2,7 @@
 
 # Viber буфер. Бот Viber на платформе 1С Предприятие
 
-![http://infostart.ru/public/588629/](images/logo.jpg)
+![logo](web/images/logo.jpg)
 
 ## Промежуточное хранение Вайбер сообщений. 
 
